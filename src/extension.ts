@@ -22,7 +22,8 @@ import ViewProvider from "./providers/ViewProvider";
 import TranslationProvider from "./providers/TranslationProvider";
 import ControllerProvider from "./providers/ControllerProvider";
 
-let updatePending = false;
+let updateTimer: NodeJS.Timeout;
+let updatePending: Boolean = false;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -38,6 +39,7 @@ export function activate(context: ExtensionContext) {
         const cachePath = path.join(__dirname, './../assets/cache');
         fs.existsSync(cachePath) || mkdirsSync(cachePath);
 
+        //Script file
         const fileName = randomString(8);
         const kernelPath = path.join(cachePath, fileName);
         fs.writeFileSync(kernelPath, laravel.getKernel());     
@@ -64,11 +66,12 @@ export function activate(context: ExtensionContext) {
         workspace.onDidSaveTextDocument(function(event: TextDocument) {
             if (isNeedUpdate(event.fileName)) {
                 if (!updatePending) {
-                    updatePending = true;
-                    setTimeout(() => {
+                    clearTimeout(updateTimer);
+                    updateTimer = setTimeout(() => {
+                        updatePending = true;
                         updateIntellisense();
                         updatePending = false;
-                    }, 2000);
+                    }, 3000);
                 }
             }
         });
