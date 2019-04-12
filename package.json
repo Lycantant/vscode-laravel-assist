@@ -1,6 +1,6 @@
 {
     "name": "vscode-laravel-assist",
-    "displayName": "vscode-laravel-assist",
+    "displayName": "Laravel Assist",
     "description": "Laravel development auxiliary extension",
     "version": "0.0.2",
     "publisher": "tiansin",
