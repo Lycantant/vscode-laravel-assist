@@ -2,7 +2,7 @@
     "name": "vscode-laravel-assist",
     "displayName": "vscode-laravel-assist",
     "description": "Laravel development auxiliary extension",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "tiansin",
     "icon": "assets/icon/icon.png",
     "engines": {
@@ -41,7 +41,7 @@
                     "LaravelAssist.pathControllers": {
                         "type": "array",
                         "default": [
-                            "app/Http/Controllers/Admin"
+                            "app/Http/Controllers"
                         ],
                         "description": "Configure additional controller path."
                     }

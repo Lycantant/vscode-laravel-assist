@@ -44,7 +44,8 @@ class Completion {
                 let funName = result[4];
                 let argIndex = items[funName];
 
-                //The regular expression search skips the beginning of the string, filling in the gaps here.
+                //The regular expression search skips the beginning of the string,
+                //Fill in whitespace characters so that the position is not offset
                 let characters = " ".repeat(start.character) + result[0];
                 let tokens = parser.phpParser.parseEval(characters);
                 for (const i in tokens.children) {
@@ -77,7 +78,8 @@ class Completion {
                 let funName = result[1];
                 let argIndex = this.funcItems[funName];
 
-                //The regular expression search skips the beginning of the string, filling in the gaps here.
+                //The regular expression search skips the beginning of the string,
+                //Fill in whitespace characters so that the position is not offset
                 let characters = " ".repeat(start.character) + result[0];
                 let tokens = parser.phpParser.parseEval(characters);
                 for (const i in tokens.children) {
@@ -109,7 +111,27 @@ class Completion {
             if (current.isAfterOrEqual(start) && current.isBeforeOrEqual(end)) {
                 let funName = result[1];
                 let argIndex = this.bladeItems[funName];
-                return true;
+
+                //The regular expression search skips the beginning of the string,
+                //Fill in whitespace characters so that the position is not offset
+                let characters = " ".repeat(start.character) + result[0];
+                if (funName.startsWith('@')) {              //Blade function special.
+                    const regex = new RegExp(funName,"gm");
+                    funName = funName.replace('@', '_');    //Unable to parse @ character
+                    characters = characters.replace(regex, funName);
+                }
+                let tokens = parser.phpParser.parseEval(characters);
+                for (const i in tokens.children) {
+                    let value = tokens.children[i];
+                    let expression = value['expression'];
+                    if (expression.kind === "call" && expression.what.kind === 'classreference') {
+                        if (expression.what.name === funName) {
+                            argIndex = Array.isArray(argIndex) ? argIndex : [argIndex];
+                            let expr = this.findCall(expression, argIndex, start, current);
+                            if (expr) return true;
+                        }
+                    }
+                }
             }
         }
         return false;
