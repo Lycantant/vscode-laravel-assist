@@ -81,7 +81,8 @@ export function activate(context: ExtensionContext) {
 function isNeedUpdate(fileName: string): boolean {
     return (
         fileName.endsWith("Controller.php") || fileName.endsWith(".blade.php") ||
-        !!fileName.match(/\/config\/\w+\.php/) || !!fileName.match(/\/routes\/\w+\.php/)
+        !!fileName.match(/\/config\/\w+\.php/) || !!fileName.match(/\/routes\/\w+\.php/) ||
+        !!fileName.match(/\/lang\/\w+\.php/)
     );
 }
 

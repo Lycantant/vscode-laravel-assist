@@ -13,18 +13,18 @@ Laravel Assistant IntelliSense Extension.
 
 ## Features
 
-### Route and Mix and Config and Lang and View autocomplete.
+### Route and Mix and Config and Lang and View autocomplete
 
 ![tutorial1](https://raw.githubusercontent.com/tiansin/vscode-laravel-assist/master/assets/images/tutorial1.gif)
-
 
 ### Blabe template function autocomplete
 
 ![tutorial2](https://raw.githubusercontent.com/tiansin/vscode-laravel-assist/master/assets/images/tutorial2.gif)
 
-
-### Controller Goto Definition.
+### Controller Goto Definition
 
 ![tutorial3](https://raw.githubusercontent.com/tiansin/vscode-laravel-assist/master/assets/images/tutorial3.gif)
 
+## Comment
 
+`You should be sure to find the php binary in the environment or set `&ensp;<font color=red>'php.validate.executablePath'</font>
