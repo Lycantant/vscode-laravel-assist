@@ -25,17 +25,12 @@ import ControllerProvider from "./providers/ControllerProvider";
 let updateTimer: NodeJS.Timeout;
 let updatePending: Boolean = false;
 
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: ExtensionContext) {
     if (laravel.workspaceVerify()) {
-        const LANGUAGES =
-        [
-            { scheme: 'file', language: 'php' },
-            { scheme: 'file', language: 'blade' },
-        ];
-        const TRIGGER_CHARACTERS = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"'.`;
-
+        //Cache directory
         const cachePath = path.join(__dirname, './../assets/cache');
         fs.existsSync(cachePath) || mkdirsSync(cachePath);
 
@@ -46,6 +41,13 @@ export function activate(context: ExtensionContext) {
         new laravel(kernelPath);
 
         updateIntellisense();
+
+        const LANGUAGES =
+        [
+            { scheme: 'file', language: 'php' },
+            { scheme: 'file', language: 'blade' },
+        ];
+        const TRIGGER_CHARACTERS = `"'`;
   
         //Providers loader
         context.subscriptions.push(languages.registerCompletionItemProvider(LANGUAGES, new RouteProvider, ...TRIGGER_CHARACTERS));

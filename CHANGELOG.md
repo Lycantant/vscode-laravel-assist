@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.1.2]
+
+String trigger timing fix.
+
 ## [0.1.1]
 
 Update installation and configuration instructions
