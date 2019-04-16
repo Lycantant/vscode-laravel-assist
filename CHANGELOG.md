@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.1.3]
+Use Built-in php.ini.
+
 ## [0.1.2]
 
 String trigger timing fix.

@@ -37,8 +37,11 @@ export function activate(context: ExtensionContext) {
         //Script file
         const fileName = randomString(8);
         const kernelPath = path.join(cachePath, fileName);
-        fs.writeFileSync(kernelPath, laravel.getKernel());     
-        new laravel(kernelPath);
+        fs.writeFileSync(kernelPath, laravel.getKernel());
+
+        //Config file
+        const configPath = path.join(cachePath, "php.ini");
+        new laravel(kernelPath, configPath);
 
         updateIntellisense();
 
