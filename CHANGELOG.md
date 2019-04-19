@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.1.4]
+Delete the built-in configuration and use the command line to configure the parameters.
+
 ## [0.1.3]
 Use Built-in php.ini.
 
