@@ -2,7 +2,7 @@
     "name": "vscode-laravel-assist",
     "displayName": "Laravel Assist",
     "description": "Laravel development auxiliary extension",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "publisher": "tiansin",
     "icon": "assets/icon/icon.png",
     "engines": {
