@@ -38,10 +38,7 @@ export function activate(context: ExtensionContext) {
         const fileName = randomString(8);
         const kernelPath = path.join(cachePath, fileName);
         fs.writeFileSync(kernelPath, laravel.getKernel());
-
-        //Config file
-        const configPath = path.join(cachePath, "php.ini");
-        new laravel(kernelPath, configPath);
+        new laravel(kernelPath);
 
         updateIntellisense();
 
@@ -76,7 +73,7 @@ export function activate(context: ExtensionContext) {
                         updatePending = true;
                         updateIntellisense();
                         updatePending = false;
-                    }, 3000);
+                    }, 2000);
                 }
             }
         });

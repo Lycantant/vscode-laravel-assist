@@ -13,11 +13,9 @@ import {
 
 class Laravel {
     public static kernelPath: string;
-    public static configPath: string;
     
-    constructor(corePath: string, configPath: string) {
+    constructor(corePath: string) {
         Laravel.kernelPath = corePath;
-        Laravel.configPath = configPath;
     }
     
     public static workspaceVerify() {
@@ -39,7 +37,7 @@ class Laravel {
         const config = workspace.getConfiguration('php');
         const executablePath: string = config.get('validate.executablePath') || "php";
 
-        const commands = `${executablePath} -c "${Laravel.configPath}" "${Laravel.kernelPath}"`;
+        const commands = `${executablePath} -d xdebug.remote_enable=0 -d xdebug.remote_autostart=0 -d xdebug.profiler_enable=0 "${Laravel.kernelPath}"`;
         return execSync(commands, {
             cwd : Laravel.workspacePath(),
             maxBuffer: Infinity,
