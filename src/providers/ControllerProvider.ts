@@ -106,12 +106,13 @@ class ControllerProvider {
                 if (script) {
                     let document = await workspace.openTextDocument(script);
                     let pattern  = new RegExp(`function\\s+${Method}\\s*\\(([^)]*)`);
+                    let target   = Uri.file(script);
                     let result   = pattern.exec(document.getText());
                     if (result) {
                         const line = document.positionAt(result.index);
-                        const target = Uri.parse(script);
                         return new Location(target, new Position(line.line, 0));
-                    } 
+                    }
+                    return new Location(target, new Position(0, 0));
                 }
             }
         }
