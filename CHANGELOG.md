@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.1.5]
+Windows cannot transfer controller files through routing files.([bc4df24](https://github.com/tiansin/vscode-laravel-assist/commit/bc4df24))
+
 ## [0.1.4]
 Delete the built-in configuration and use the command line to configure the parameters.
 
