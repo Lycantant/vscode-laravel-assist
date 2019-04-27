@@ -82,6 +82,22 @@ class ControllerProvider {
         }
     }
 
+    protected getMethodPosition(document: TextDocument, methodName: string) {
+        let pattern = new RegExp(`function\\s+${methodName}\\s*\\(([^)]*)`);
+        let result  = pattern.exec(document.getText());
+        if (result) {
+            return document.positionAt(result.index);
+        }
+    }
+
+    protected getClassPosition(document: TextDocument, className: string) {
+        let pattern = new RegExp(`class\\s+${className}\\s+`);
+        let result  = pattern.exec(document.getText());
+        if (result) {
+            return document.positionAt(result.index);
+        }
+    }
+
     provideHover(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<Hover> {
         let linkRange = document.getWordRangeAtPosition(position, ControllerProvider.controllerPattern);
         if (linkRange) {
@@ -104,15 +120,13 @@ class ControllerProvider {
             if (workspacePath) {
                 const script = this.getControllerPath(workspacePath, Controller);
                 if (script) {
-                    let document = await workspace.openTextDocument(script);
-                    let pattern  = new RegExp(`function\\s+${Method}\\s*\\(([^)]*)`);
                     let target   = Uri.file(script);
-                    let result   = pattern.exec(document.getText());
-                    if (result) {
-                        const line = document.positionAt(result.index);
-                        return new Location(target, new Position(line.line, 0));
-                    }
-                    return new Location(target, new Position(0, 0));
+                    let document = await workspace.openTextDocument(script);
+
+                    let position = null;
+                    if (Method) position = this.getMethodPosition(document, Method);
+                    position = position || this.getClassPosition(document, Controller) || new Position(0, 0);
+                    return new Location(target, position);
                 }
             }
         }
