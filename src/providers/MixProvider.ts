@@ -56,7 +56,8 @@ class MixProvider implements CompletionItemProvider {
 
             },
             {
-                mix : 0
+                mix : 0,
+                asset : 0,
             }
         );
         if (complete.allowCompletion(document, position)) {
