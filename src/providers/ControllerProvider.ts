@@ -19,14 +19,15 @@ import { IActionItem } from "./interface/action";
 import { trim } from "../helpers";
 import laravel from "../laravel";
 
-//deprecated
 class ControllerLink extends DocumentLink {
-    filePath: string;
-    funcName: string;
-    constructor(range: Range, filePath: string, funcName: string) {
+    script: string;
+    controller: string;
+    method: string | null;
+    constructor(range: Range, script: string, controller: string, method: string | null) {
         super(range);
-        this.filePath = filePath;
-        this.funcName = funcName;
+        this.script = script;
+        this.controller = controller;
+        this.method = method;
     }
 }
 
@@ -59,9 +60,16 @@ class ControllerProvider {
         return { Controller, Method };
     }
 
+    protected basename(namespace: string) {
+        return namespace.split('\\').reverse()[0];
+    }
+
     protected getControllerPath(workspacePath: string ,controller: string): string | undefined {
         for (const iter of ControllerProvider.items) {
-            if (iter.baseName === controller || iter.fullName.endsWith(controller)) {
+            if (
+                iter.baseName === controller ||
+                this.basename(iter.fullName) === this.basename(controller)
+            ) {
                 return iter.script;
             }
         }
@@ -98,6 +106,14 @@ class ControllerProvider {
         }
     }
 
+    protected getPosition(document: TextDocument, Controller: string, Method: string | null) {
+        if (Method) {
+            let position = this.getMethodPosition(document, Method);
+            if (position) return position;
+        }
+        return this.getClassPosition(document, Controller) || new Position(0, 0);
+    }
+
     provideHover(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<Hover> {
         let linkRange = document.getWordRangeAtPosition(position, ControllerProvider.controllerPattern);
         if (linkRange) {
@@ -122,17 +138,13 @@ class ControllerProvider {
                 if (script) {
                     let target   = Uri.file(script);
                     let document = await workspace.openTextDocument(script);
-
-                    let position = null;
-                    if (Method) position = this.getMethodPosition(document, Method);
-                    position = position || this.getClassPosition(document, Controller) || new Position(0, 0);
+                    let position = this.getPosition(document, Controller, Method);
                     return new Location(target, position);
                 }
             }
         }
     }
 
-    //deprecated
     provideDocumentLinks(document: TextDocument, token: CancellationToken): ProviderResult<DocumentLink[]> {
         let links: Array<DocumentLink> = [];
         let fullText: string = document.getText();
@@ -145,32 +157,26 @@ class ControllerProvider {
             while (result = pattern.exec(fullText)) {
                 const action = trim(result[0], ["'", '"']);
                 const line   = document.positionAt(result.index);
-                const start  = new Position(line.line, line.character + 1);
-                const end    = new Position(line.line, start.character + action.length);
-                
+
                 const { Controller, Method } = this.parseAction(action);
                 const script = this.getControllerPath(workspacePath, Controller);
-
-                if (script && fs.existsSync(script)) {
-                    const range = new Range(start, end);
-                    links.push(new ControllerLink(range , script, Method || "index"));
+                if (script) {
+                    const start     = new Position(line.line, line.character + 1);
+                    const end       = new Position(line.line, start.character + action.length);
+                    const linkRange = new Range(start, end);
+                    links.push(new ControllerLink(linkRange, script, Controller, Method));
                 }
             }
         }
         return links;
     }
 
-    //deprecated
     async resolveDocumentLink(link: ControllerLink, token: CancellationToken){
-        link.target = Uri.parse(`file:${link.filePath}`);
+        let target   = Uri.file(link.script);
+        let document = await workspace.openTextDocument(target);
+        let position = this.getPosition(document, link.controller, link.method);
 
-        let document = await workspace.openTextDocument(link.target);
-        let pattern  = new RegExp(`function\\s+${link.funcName}\\s*\\(([^)]*)`);
-        let result   = pattern.exec(document.getText());
-        if (result) {
-            const line = document.positionAt(result.index);
-            link.target = Uri.parse(`file:${link.filePath}#${line.line + 1}`);
-        } 
+        link.target = Uri.parse(`file:${link.script}#${position.line + 1}`);
         return link;
     }
     
