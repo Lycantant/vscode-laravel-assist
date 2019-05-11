@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.1.7]
+    
+*Support for automatic completion of the asset function.* <br/>
+*Routing to controller can be configured using definitions or document links.* <br/>
+
+    LaravelAssist.gotoController: DocumentLink | Definition
+    
+*Fixed an error in the logic of the controller name.*
+
 ## [0.1.6]
 Optimize controller goto-definition.
 
