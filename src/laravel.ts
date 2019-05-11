@@ -5,7 +5,6 @@ import {
 } from "child_process";
 import {  
     workspace
-
 } from "vscode";
 import {
     
@@ -13,9 +12,11 @@ import {
 
 class Laravel {
     public static kernelPath: string;
+    public static binaryPath: string;
     
-    constructor(corePath: string) {
+    constructor(corePath: string, phpPath: string) {
         Laravel.kernelPath = corePath;
+        Laravel.binaryPath = phpPath;
     }
     
     public static workspaceVerify() {
@@ -34,10 +35,8 @@ class Laravel {
     }
 
     public static runnerKernel(): string {
-        const config = workspace.getConfiguration('php');
-        const executablePath: string = config.get('validate.executablePath') || "php";
-
-        const commands = `${executablePath} -d xdebug.remote_enable=0 -d xdebug.remote_autostart=0 -d xdebug.profiler_enable=0 "${Laravel.kernelPath}"`;
+        const args = `-d xdebug.remote_enable=0 -d xdebug.remote_autostart=0 -d xdebug.profiler_enable=0`;
+        const commands = `${Laravel.binaryPath} ${args} "${Laravel.kernelPath}"`;
         return execSync(commands, {
             cwd : Laravel.workspacePath(),
             maxBuffer: Infinity,

@@ -13,6 +13,7 @@ import {
 import {
     mkdirsSync, randomString, tryParseJSON
 } from "./helpers";
+
 import laravel from "./laravel";
 
 import RouteProvider from "./providers/RouteProvider";
@@ -25,6 +26,8 @@ import ControllerProvider from "./providers/ControllerProvider";
 let updateTimer: NodeJS.Timeout;
 let updatePending: Boolean = false;
 
+const which = require("which");
+const configuration = workspace.getConfiguration('LaravelAssist');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -38,7 +41,14 @@ export function activate(context: ExtensionContext) {
         const fileName = randomString(8);
         const kernelPath = path.join(cachePath, fileName);
         fs.writeFileSync(kernelPath, laravel.getKernel());
-        new laravel(kernelPath);
+
+        //Php binary
+        const config = workspace.getConfiguration('php');
+        const executablePath: string = config.get('validate.executablePath') || which.sync('php', {nothrow: true});
+        if (!fs.existsSync(executablePath)) 
+            return window.showErrorMessage("Could not find php binary, configure 'validate.executablePath'");
+
+        new laravel(kernelPath, executablePath);
 
         updateIntellisense();
 
@@ -58,7 +68,12 @@ export function activate(context: ExtensionContext) {
         context.subscriptions.push(languages.registerCompletionItemProvider(LANGUAGES, new ControllerProvider, ...TRIGGER_CHARACTERS));
         
         context.subscriptions.push(languages.registerHoverProvider(LANGUAGES, new ControllerProvider));
-        context.subscriptions.push(languages.registerDefinitionProvider(LANGUAGES, new ControllerProvider));
+        const type = configuration.get('gotoController');
+        if (type === "Definition") {
+            context.subscriptions.push(languages.registerDefinitionProvider(LANGUAGES, new ControllerProvider));
+        }else {
+            context.subscriptions.push(languages.registerDocumentLinkProvider(LANGUAGES, new ControllerProvider));
+        }
 
         //Commands register
         let disposable = [];

@@ -44,6 +44,15 @@
                             "app/Http/Controllers"
                         ],
                         "description": "Configure additional controller path."
+                    },
+                    "LaravelAssist.gotoController": {
+                        "type": "string",
+                        "default": "DocumentLink",
+                        "enum": [
+                            "Definition",
+                            "DocumentLink"
+                        ],
+                        "description": "Configure controller jumps to use definitions or document links."
                     }
                 }
             }
@@ -64,6 +73,7 @@
         "vscode": "^1.1.28"
     },
     "dependencies": {
-        "php-parser": "^3.0.0-prerelease.8"
+        "php-parser": "^3.0.0-prerelease.8",
+        "which": "^1.3.1"
     }
 }
