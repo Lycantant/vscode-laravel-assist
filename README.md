@@ -15,15 +15,15 @@ Laravel Assistant IntelliSense Extension.
 
 ### Route and Mix and Config and Lang and View autocomplete
 
-![tutorial1](https://raw.githubusercontent.com/tiansin/vscode-laravel-assist/master/assets/images/tutorial1.gif)
+![tutorial1](https://raw.githubusercontent.com/Lycantant/vscode-laravel-assist/master/assets/images/tutorial1.gif)
 
 ### Blabe template function autocomplete
 
-![tutorial2](https://raw.githubusercontent.com/tiansin/vscode-laravel-assist/master/assets/images/tutorial2.gif)
+![tutorial2](https://raw.githubusercontent.com/Lycantant/vscode-laravel-assist/master/assets/images/tutorial2.gif)
 
 ### Controller Goto Definition
 
-![tutorial3](https://raw.githubusercontent.com/tiansin/vscode-laravel-assist/master/assets/images/tutorial3.gif)
+![tutorial3](https://raw.githubusercontent.com/Lycantant/vscode-laravel-assist/master/assets/images/tutorial3.gif)
 
 ## Comment
 
